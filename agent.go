@@ -22,7 +22,7 @@ func New() *Agent {
 	agent := &Agent{}
 	agent.cmds = make([]IAgent, 0)
 	agent.g, agent.ctx = errgroup.WithContext(context.Background())
-	return &Agent{}
+	return agent
 }
 
 func (agent *Agent) Run() error {
@@ -49,6 +49,7 @@ func (agent *Agent) HandlerSignals(signals ...os.Signal) {
 
 func (agent *Agent) start() error {
 	for _, cmd := range agent.cmds {
+		cmd := cmd
 		agent.g.Go(func() error {
 			select {
 			case err := <-agent.warpCmdStart(cmd.Start):
